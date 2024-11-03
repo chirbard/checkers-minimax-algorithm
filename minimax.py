@@ -1,9 +1,36 @@
 
 import numpy as np
 
+import game_utils
 
-def get_best_move(board, depth=3):
-    pass
+
+def get_best_move(initial_board, player, depth=1):
+    boards = get_all_legal_boards(initial_board, player)
+    scores = []
+    for board in boards:
+        if depth == 0:
+            scores.append(evaluate_board(initial_board, board, player))
+        else:
+            opponent_best_move = get_opponent_best_move(board, player, depth)
+            scores.append(evaluate_board(
+                initial_board, opponent_best_move, player))
+    best_score = max(scores)
+    best_move = boards[scores.index(best_score)]
+    return best_move
+
+
+def get_opponent_best_move(initial_board, player, depth=1):
+    boards = get_all_legal_boards(initial_board, -player)
+    scores = []
+    for board in boards:
+        if depth == 0:
+            scores.append(evaluate_board(initial_board, board, player))
+        else:
+            my_best_move = get_best_move(board, -player, depth - 1)
+            scores.append(evaluate_board(initial_board, my_best_move, player))
+    best_score = min(scores)
+    best_move = boards[scores.index(best_score)]
+    return best_move
 
 
 def evaluate_board(intitial_board, new_board, player):

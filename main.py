@@ -20,20 +20,44 @@ import numpy as np
 #     [0, 0, 0, -1, 0, 0],
 # ]
 
+# initial_board = [
+#     [0, 1, 0, 0, 0, 0, 0, 0],
+#     [0, 0, -1, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 1, 0, 0],
+#     [0, 0, -1, 0, -1, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, -1, 0, -1, 0, -1, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, -1, 0, 0, 0, 0, 0],
+# ]
+
+# initial_board = [
+#     [0, 1, 0, 1, 0, 1, 0, 1],
+#     [1, 0, 1, 0, 1, 0, 1, 0],
+#     [0, 1, 0, 1, 0, 1, 0, 1],
+#     [0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0],
+#     [-1, 0, -1, 0, -1, 0, -1, 0],
+#     [0, -1, 0, -1, 0, -1, 0, -1],
+#     [-1, 0, -1, 0, -1, 0, -1, 0],
+# ]
+
 initial_board = [
-    [0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, -1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, -1, 0, -1, 0, 0, 0],
+    [0, -1, 0, -1, 0, -1, 0, -1],
+    [-1, 0, -1, 0, -1, 0, -1, 0],
+    [0, -1, 0, -1, 0, -1, 0, -1],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, -1, 0, -1, 0, -1, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, -1, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
 ]
 
 initial_board = np.array(initial_board)
+
 print("initial board")
 game_utils.checkers.print_board(initial_board)
+initial_board = np.rot90(initial_board, 2)
 print()
 
 # minimax.get_all_legal_moves(board, 1)
@@ -46,8 +70,14 @@ print()
 #     game_utils.checkers.print_board(board)
 #     print()
 
-boards = minimax.get_all_legal_boards(initial_board, 1)
-for board in boards:
-    print(f"score: {minimax.evaluate_board(initial_board, board, 1)}")
-    game_utils.checkers.print_board(board)
-    print()
+# boards = minimax.get_all_legal_boards(initial_board, 1)
+# for board in boards:
+#     print(f"score: {minimax.evaluate_board(initial_board, board, 1)}")
+#     game_utils.checkers.print_board(board)
+#     print()
+board = minimax.get_best_move(initial_board, 1, depth=2)
+board = np.rot90(board, 2)
+
+game_utils.checkers.print_board(board)
+
+# minimax.get_scores(initial_board, 1)
