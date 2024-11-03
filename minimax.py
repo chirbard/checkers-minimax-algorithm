@@ -183,57 +183,61 @@ def start_move(board, y, x, player, is_king):
     return paths
 
 
-def look_for_jump(board, player, paths=[[(0, 1), (1, 2), (2, 3)]], is_king=False):
-    # paths = [[(1, 1), (2, 2), (3, 3)]]
-    # paths = [[(0, 1), (1, 2), (2, 3)]]
+def look_for_jump(board, player, paths=[], is_king=False):
+    """
+    Check if we can jump over multiple opponent pieces in one move.
+
+    Returns a list of paths.
+    """
     new_paths = []
     for path in paths:
-        # new_path = path
         last_coordinate = path[-1]
         y = last_coordinate[0]
         x = last_coordinate[1]
-        # check if we can jump
-        # can we move left
         changed = False
+
+        first_coordinate_y = []
+        first_coordinate_x = []
+        second_coordinate_y = []
+        second_coordinate_x = []
+        if is_king and y - 2 >= 0:
+            first_coordinate_y.append(y - 1)
+            second_coordinate_y.append(y - 2)
+
         if y + 2 < board.shape[0]:
+            first_coordinate_y.append(y + 1)
+            second_coordinate_y.append(y + 2)
 
-            if x - 2 >= 0:
-                new_path = get_jump_path_if_possible(first_coordinate=(y+1, x-1),
-                                                     second_coordinate=(y+2, x-2), board=board, player=player)
+        if x - 2 >= 0:
+            first_coordinate_x.append(x - 1)
+            second_coordinate_x.append(x - 2)
+
+        if x + 2 < board.shape[1]:
+            first_coordinate_x.append(x + 1)
+            second_coordinate_x.append(x + 2)
+
+        for y_index in range(len(first_coordinate_y)):
+            for x_index in range(len(first_coordinate_x)):
+                new_path = get_jump_path_if_possible(first_coordinate=(first_coordinate_y[y_index], first_coordinate_x[x_index]),
+                                                     second_coordinate=(second_coordinate_y[y_index], second_coordinate_x[x_index]), board=board, player=player)
                 if new_path:
                     new_paths.append(path + new_path)
                     changed = True
-
-            if x + 2 < board.shape[1]:
-                new_path = get_jump_path_if_possible(first_coordinate=(y+1, x+1),
-                                                     second_coordinate=(y+2, x+2), board=board, player=player)
-                if new_path:
-                    new_paths.append(path + new_path)
-                    changed = True
-
-        if is_king:
-            if y - 2 >= 0:
-                if x - 2 >= 0:
-                    new_path = get_jump_path_if_possible(first_coordinate=(y-1, x-1),
-                                                         second_coordinate=(y-2, x-2), board=board, player=player)
-
-                if x + 2 < board.shape[1]:
-                    new_path = get_jump_path_if_possible(first_coordinate=(y-1, x+1),
-                                                         second_coordinate=(y-2, x+2), board=board, player=player)
-                    if new_path:
-                        new_paths.append(path + new_path)
-                        changed = True
 
         if not changed:
             new_paths.append(path)
 
-    # print(new_paths)
     if new_paths == paths:
         return new_paths
-    return look_for_jump(board, player, new_paths)
+    return look_for_jump(board=board, player=player, paths=new_paths, is_king=is_king)
 
 
-def get_jump_path_if_possible(first_coordinate, second_coordinate, board, player) -> list:
+def get_jump_path_if_possible(first_coordinate, second_coordinate, board, player):
+    """
+    Check if first coordinate is an opponent piece and second coordinate is empty.
+
+    Returns `None` if jump isn't possible, if is possible, returns a list of coordinates the jump passes.
+    """
     first_key = board[first_coordinate[0], first_coordinate[1]]
     second_key = board[second_coordinate[0], second_coordinate[1]]
     if (first_key == -player or first_key == 2 * - player) and second_key == 0:
