@@ -19,6 +19,22 @@ def get_best_move(board, depth=3):
 # function look for jumps return list of moved coordinates. if we make multiple jumps then return the whole path recursively
 #   note the path could branch out
 
+
+def generate_boards_for_one_piece(board, paths):
+    boards = []
+    for path in paths:
+        new_board = board.copy()
+        for i in range(len(path) - 1):
+            y = path[i][0]
+            x = path[i][1]
+            new_board[y][x] = 0
+        y = path[-1][0]
+        x = path[-1][1]
+        new_board[y][x] = 1
+        boards.append(new_board)
+    return boards
+
+
 def start_move(board, y, x, player):
     # move left
     left_path = [[(y, x)]]
