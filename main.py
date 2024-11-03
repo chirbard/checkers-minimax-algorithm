@@ -37,4 +37,5 @@ game_utils.checkers.print_board(board)
 
 # minimax.get_all_legal_moves(board, 1)
 # minimax.bfs(board, 1, 1, 1)
-print(minimax.look_for_jump(board, 1, 1, 1))
+# print(minimax.look_for_jump(board, 1, 1, 1))
+print(minimax.start_move(board, 0, 1, 1))
