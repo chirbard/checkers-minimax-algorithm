@@ -38,9 +38,18 @@ def get_opponent_best_move(initial_board, player, depth=1):
 def evaluate_board(intitial_board, new_board, player):
     player_pieces_initial = np.count_nonzero(intitial_board == player)
     player_pieces_new = np.count_nonzero(new_board == player)
+    player_kings_initial = np.count_nonzero(intitial_board == player * 2)
+    player_kings_new = np.count_nonzero(new_board == player * 2)
     opponent_pieces_initial = np.count_nonzero(intitial_board == -player)
     opponent_pieces_new = np.count_nonzero(new_board == -player)
-    return player_pieces_new - player_pieces_initial + opponent_pieces_initial - opponent_pieces_new
+    opponent_kings_initial = np.count_nonzero(intitial_board == -player * 2)
+    opponent_kings_new = np.count_nonzero(new_board == -player * 2)
+    score = 0
+    score += (player_pieces_new - player_pieces_initial) * 1
+    score += (player_kings_new - player_kings_initial) * 2
+    score += (opponent_pieces_new - opponent_pieces_initial) * -1
+    score += (opponent_kings_new - opponent_kings_initial) * -2
+    return score
 
 
 def get_all_legal_boards(board, player):
@@ -79,7 +88,7 @@ def generate_boards_for_one_piece(board, paths, player, is_king):
         y = path[-1][0]
         x = path[-1][1]
         piece = player
-        if is_king:
+        if is_king or (not is_king and y == board.shape[0] - 1):
             piece = piece * 2
         new_board[y][x] = piece
         boards.append(new_board)
