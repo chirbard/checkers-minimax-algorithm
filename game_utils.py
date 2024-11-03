@@ -3,6 +3,8 @@ class checkers:
         0: '| ',
         1: '|x',
         -1: '|o',
+        2: '|X',
+        -2: '|O',
     }
 
     @staticmethod
