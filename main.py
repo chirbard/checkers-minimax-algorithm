@@ -54,14 +54,14 @@ import numpy as np
 # ]
 
 initial_board = [
-    [0, -1, 0, -1, 0, -1, 0, -1],
+    [0, 0, 0, 0, 0, -1, 0, 0],
     [-1, 0, -1, 0, -1, 0, -1, 0],
-    [0, -1, 0, -1, 0, -1, 0, -1],
+    [0, -1, 0, -1, 0, 0, 0, 1],
+    [0, 0, -1, 0, -2, 0, 0, 0],
+    [0, 1, 0, 1, 0, 0, 0, -1],
+    [1, 0, 1, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0],
 ]
 
 # initial_board = [
@@ -93,6 +93,6 @@ print()
 # print()
 
 
-board = minimax.get_best_move(initial_board, -1, depth=2)
+board = minimax.get_best_move(initial_board, 1, depth=2)
 board = np.rot90(board, 2)
 game_utils.checkers.print_board(board)

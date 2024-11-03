@@ -4,6 +4,7 @@ import numpy as np
 import game_utils
 
 # TODO implement game ending when there are no pieces
+# TODO only allow jumping when there is a jump available
 
 
 def get_best_move(initial_board, player, depth=1):
@@ -72,6 +73,10 @@ def get_all_legal_boards(board, player):
     if player == -1:
         # rotate board by 180 degrees
         boards = [np.rot90(board, 2) for board in boards]
+
+    # for board in boards:
+    #     game_utils.checkers.print_board(board)
+    #     print()
     return boards
 
 
@@ -103,7 +108,7 @@ def start_move(board, y, x, player, is_king):
         if first_jump == 0:
             lower_left_path[0].append((y + 1, x - 1))
             # paths.append(left_path)
-        elif first_jump == -player and x - 2 >= 0 and y + 2 < board.shape[0]:
+        elif (first_jump == -player or first_jump == 2 * - player) and x - 2 >= 0 and y + 2 < board.shape[0]:
             second_jump = board[y + 2, x - 2]
             if second_jump == 0:
                 lower_left_path[0].append((y + 1, x - 1))
@@ -117,7 +122,7 @@ def start_move(board, y, x, player, is_king):
         if first_jump == 0:
             lower_right_path[0].append((y + 1, x + 1))
             # paths.append(right_path)
-        elif first_jump == -player and x + 2 < board.shape[1] and y + 2 < board.shape[0]:
+        elif (first_jump == -player or first_jump == 2 * - player) and x + 2 < board.shape[1] and y + 2 < board.shape[0]:
             second_jump = board[y + 2, x + 2]
             if second_jump == 0:
                 lower_right_path[0].append((y + 1, x + 1))
@@ -133,7 +138,7 @@ def start_move(board, y, x, player, is_king):
             if first_jump == 0:
                 upper_left_path[0].append((y - 1, x - 1))
                 # paths.append(left_path)
-            elif first_jump == -player and x - 2 >= 0 and y - 2 >= 0:
+            elif (first_jump == -player or first_jump == 2 * - player) and x - 2 >= 0 and y - 2 >= 0:
                 second_jump = board[y - 2, x - 2]
                 if second_jump == 0:
                     upper_left_path[0].append((y - 1, x - 1))
@@ -146,7 +151,7 @@ def start_move(board, y, x, player, is_king):
             if first_jump == 0:
                 upper_right_path[0].append((y - 1, x + 1))
                 # paths.append(right_path)
-            elif first_jump == -player and x + 2 < board.shape[1] and y - 2 >= 0:
+            elif (first_jump == -player or first_jump == 2 * - player) and x + 2 < board.shape[1] and y - 2 >= 0:
                 second_jump = board[y - 2, x + 2]
                 if second_jump == 0:
                     upper_right_path[0].append((y - 1, x + 1))
@@ -195,7 +200,7 @@ def look_for_jump(board, player, paths=[[(0, 1), (1, 2), (2, 3)]], is_king=False
             if x - 2 >= 0:
                 first_jump = board[y + 1, x - 1]
                 second_jump = board[y + 2, x - 2]
-                if first_jump == -player and second_jump == 0:
+                if (first_jump == -player or first_jump == 2 * - player) and second_jump == 0:
                     new_path = path + [(y + 1, x - 1), (y + 2, x - 2)]
                     new_paths.append(new_path)
                     changed = True
@@ -203,7 +208,7 @@ def look_for_jump(board, player, paths=[[(0, 1), (1, 2), (2, 3)]], is_king=False
             if x + 2 < board.shape[1]:
                 first_jump = board[y + 1, x + 1]
                 second_jump = board[y + 2, x + 2]
-                if first_jump == -player and second_jump == 0:
+                if (first_jump == -player or first_jump == 2 * - player) and second_jump == 0:
                     new_path = path + [(y + 1, x + 1), (y + 2, x + 2)]
                     new_paths.append(new_path)
                     changed = True
@@ -213,7 +218,7 @@ def look_for_jump(board, player, paths=[[(0, 1), (1, 2), (2, 3)]], is_king=False
                 if x - 2 >= 0:
                     first_jump = board[y - 1, x - 1]
                     second_jump = board[y - 2, x - 2]
-                    if first_jump == -player and second_jump == 0:
+                    if (first_jump == -player or first_jump == 2 * - player) and second_jump == 0:
                         new_path = path + [(y - 1, x - 1), (y - 2, x - 2)]
                         new_paths.append(new_path)
                         changed = True
@@ -221,7 +226,7 @@ def look_for_jump(board, player, paths=[[(0, 1), (1, 2), (2, 3)]], is_king=False
                 if x + 2 < board.shape[1]:
                     first_jump = board[y - 1, x + 1]
                     second_jump = board[y - 2, x + 2]
-                    if first_jump == -player and second_jump == 0:
+                    if (first_jump == -player or first_jump == 2 * - player) and second_jump == 0:
                         new_path = path + [(y - 1, x + 1), (y - 2, x + 2)]
                         new_paths.append(new_path)
                         changed = True
