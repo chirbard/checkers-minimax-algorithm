@@ -14,6 +14,54 @@ def get_all_legal_moves(board, player):
                 print(possible_moves)
 
 
+# function look
+# function look for empty which returns a list of all possible empty  to move to
+# function look for jumps return list of moved coordinates. if we make multiple jumps then return the whole path recursively
+#   note the path could branch out
+
+def start_move(board, y, x, player):
+    pass
+
+
+def look_for_jump(board, y, x, player, paths=[[(0, 1), (1, 2), (2, 3)]]):
+    # paths = [[(1, 1), (2, 2), (3, 3)]]
+    # paths = [[(0, 1), (1, 2), (2, 3)]]
+    new_paths = []
+    for path in paths:
+        # new_path = path
+        last_coordinate = path[-1]
+        y = last_coordinate[0]
+        x = last_coordinate[1]
+        # check if we can jump
+        # can we move left
+        changed = False
+        if y + 2 < board.shape[0]:
+
+            if x - 2 >= 0:
+                first_jump = board[y + 1, x - 1]
+                second_jump = board[y + 2, x - 2]
+                if first_jump == -player and second_jump == 0:
+                    new_path = path + [(y + 1, x - 1), (y + 2, x - 2)]
+                    new_paths.append(new_path)
+                    changed = True
+
+            if x + 2 < board.shape[1]:
+                first_jump = board[y + 1, x + 1]
+                second_jump = board[y + 2, x + 2]
+                if first_jump == -player and second_jump == 0:
+                    new_path = path + [(y + 1, x + 1), (y + 2, x + 2)]
+                    new_paths.append(new_path)
+                    changed = True
+
+        if not changed:
+            new_paths.append(path)
+
+    # print(new_paths)
+    if new_paths == paths:
+        return new_paths
+    return look_for_jump(board, y, x, player, new_paths)
+
+
 def bfs(board, y, x, player, coordinates_to_visit=[]):
     # coordinates: (y, x, direction)
     # if direction is 0 this means we are starting moving
