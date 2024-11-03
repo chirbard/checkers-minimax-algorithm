@@ -22,6 +22,14 @@ def get_best_move(board, depth=3):
 # function look for jumps return list of moved coordinates. if we make multiple jumps then return the whole path recursively
 #   note the path could branch out
 
+def evaluate_board(intitial_board, new_board, player):
+    player_pieces_initial = np.count_nonzero(intitial_board == player)
+    player_pieces_new = np.count_nonzero(new_board == player)
+    opponent_pieces_initial = np.count_nonzero(intitial_board == -player)
+    opponent_pieces_new = np.count_nonzero(new_board == -player)
+    return player_pieces_new - player_pieces_initial + opponent_pieces_initial - opponent_pieces_new
+
+
 def get_all_legal_boards(board, player):
     boards = []
 

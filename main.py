@@ -2,7 +2,7 @@ import minimax
 import game_utils
 import numpy as np
 
-# board = [
+# initial_board = [
 #     [1, 0, 1, 0, 1, 0],
 #     [0, 1, 0, 1, 0, 1],
 #     [0, 0, 0, 0, 0, 0],
@@ -11,28 +11,29 @@ import numpy as np
 #     [0, -1, 0, -1, 0, -1],
 # ]
 
-board = [
-    [1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1],
-    [0, 0, -1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [-1, 0, -1, 0, -1, 0],
-    [0, 0, 0, -1, 0, 0],
-]
-
-# board = [
-#     [0, 1, 0, 0, 0, 0, 0, 0],
-#     [0, 0, -1, 0, 0, 0, 0, 0],
-#     [0, 0, 0, 0, 0, 1, 0, 0],
-#     [0, 0, -1, 0, -1, 0, 0, 0],
-#     [0, 0, 0, 0, 0, 0, 0, 0],
-#     [0, 0, -1, 0, -1, 0, -1, 0],
-#     [0, 0, 0, 0, 0, 0, 0, 0],
-#     [0, 0, -1, 0, 0, 0, 0, 0],
+# initial_board = [
+#     [1, 0, 1, 0, 1, 0],
+#     [0, 1, 0, 1, 0, 1],
+#     [0, 0, -1, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0],
+#     [-1, 0, -1, 0, -1, 0],
+#     [0, 0, 0, -1, 0, 0],
 # ]
 
-board = np.array(board)
-game_utils.checkers.print_board(board)
+initial_board = [
+    [0, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, -1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, -1, 0, -1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, -1, 0, -1, 0, -1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, -1, 0, 0, 0, 0, 0],
+]
+
+initial_board = np.array(initial_board)
+print("initial board")
+game_utils.checkers.print_board(initial_board)
 print()
 
 # minimax.get_all_legal_moves(board, 1)
@@ -45,7 +46,8 @@ print()
 #     game_utils.checkers.print_board(board)
 #     print()
 
-boards = minimax.get_all_legal_boards(board, -1)
+boards = minimax.get_all_legal_boards(initial_board, 1)
 for board in boards:
+    print(f"score: {minimax.evaluate_board(initial_board, board, 1)}")
     game_utils.checkers.print_board(board)
     print()
