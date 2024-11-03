@@ -3,9 +3,6 @@ import numpy as np
 
 import game_utils
 
-# TODO implement game ending when there are no pieces
-# TODO only allow jumping when there is a jump available
-
 
 def get_best_move(initial_board, player, depth=1):
     boards = get_all_legal_boards(initial_board, player)
@@ -101,6 +98,33 @@ def generate_boards_for_one_piece(board, paths, player, is_king):
 
 
 def start_move(board, y, x, player, is_king):
+    # TODO use the get_jump_path_if_possible function here
+
+    # first_coordinate_y = []
+    # first_coordinate_x = []
+    # second_coordinate_y = []
+    # second_coordinate_x = []
+    # if is_king and y - 1 >= 0:
+    #     first_coordinate_y.append(y - 1)
+    # if is_king and y - 2 >= 0:
+    #     second_coordinate_y.append(y - 2)
+    # if y + 1 < board.shape[0]:
+    #     first_coordinate_y.append(y + 1)
+    # if y + 2 < board.shape[0]:
+    #     second_coordinate_y.append(y + 2)
+    # if x - 1 >= 0:
+    #     first_coordinate_x.append(x - 1)
+    # if x - 2 >= 0:
+    #     second_coordinate_x.append(x - 2)
+    # if x + 1 < board.shape[1]:
+    #     first_coordinate_x.append(x + 1)
+    # if x + 2 < board.shape[1]:
+    #     second_coordinate_x.append(x + 2)
+
+    # for y_index in range(len(first_coordinate_y)):
+    #     for x_index in range(len(first_coordinate_x)):
+    #         first_key = board[first_coordinate_y[y_index], first_coordinate_x[x_index]]
+
     # move left
     lower_left_path = [[(y, x)]]
     if x - 1 >= 0 and y + 1 < board.shape[0]:
