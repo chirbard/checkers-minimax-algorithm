@@ -1,4 +1,7 @@
 
+import numpy as np
+
+
 def get_best_move(board, depth=3):
     pass
 
@@ -21,17 +24,29 @@ def get_best_move(board, depth=3):
 
 def get_all_legal_boards(board, player):
     boards = []
+
+    if player == -1:
+        # rotate board by 180 degrees
+        board = np.rot90(board, 2)
+
     for y in range(board.shape[0]):
         for x in range(board.shape[1]):
             if board[y, x] == player:
                 paths = start_move(board, y, x, player)
-                boards = boards + generate_boards_for_one_piece(board, paths)
+                boards = boards + \
+                    generate_boards_for_one_piece(board, paths, player)
+
+    if player == -1:
+        # rotate board by 180 degrees
+        boards = [np.rot90(board, 2) for board in boards]
     return boards
 
 
-def generate_boards_for_one_piece(board, paths):
+def generate_boards_for_one_piece(board, paths, player):
     boards = []
     for path in paths:
+        if len(path) == 1:
+            continue
         new_board = board.copy()
         for i in range(len(path) - 1):
             y = path[i][0]
@@ -39,7 +54,7 @@ def generate_boards_for_one_piece(board, paths):
             new_board[y][x] = 0
         y = path[-1][0]
         x = path[-1][1]
-        new_board[y][x] = 1
+        new_board[y][x] = player
         boards.append(new_board)
     return boards
 

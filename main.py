@@ -11,29 +11,29 @@ import numpy as np
 #     [0, -1, 0, -1, 0, -1],
 # ]
 
-# board = [
-#     [1, 0, 1, 0, 1, 0],
-#     [0, 1, 0, 1, 0, 1],
-#     [0, 0, -1, 0, 0, 0],
-#     [0, 0, 0, 0, 0, 0],
-#     [-1, 0, -1, 0, -1, 0],
-#     [0, 0, 0, -1, 0, 0],
-# ]
-
 board = [
-    [0, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, -1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 0, -1, 0, -1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, -1, 0, -1, 0, -1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, -1, 0, 0, 0, 0, 0],
-
+    [1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1],
+    [0, 0, -1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [-1, 0, -1, 0, -1, 0],
+    [0, 0, 0, -1, 0, 0],
 ]
+
+# board = [
+#     [0, 1, 0, 0, 0, 0, 0, 0],
+#     [0, 0, -1, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 1, 0, 0],
+#     [0, 0, -1, 0, -1, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, -1, 0, -1, 0, -1, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, -1, 0, 0, 0, 0, 0],
+# ]
 
 board = np.array(board)
 game_utils.checkers.print_board(board)
+print()
 
 # minimax.get_all_legal_moves(board, 1)
 # minimax.bfs(board, 1, 1, 1)
@@ -45,7 +45,7 @@ game_utils.checkers.print_board(board)
 #     game_utils.checkers.print_board(board)
 #     print()
 
-boards = minimax.get_all_legal_boards(board, 1)
+boards = minimax.get_all_legal_boards(board, -1)
 for board in boards:
     game_utils.checkers.print_board(board)
     print()
