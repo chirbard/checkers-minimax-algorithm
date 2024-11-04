@@ -5,6 +5,9 @@ import game_utils
 
 
 def get_best_move(initial_board, player, depth=1):
+    """
+    Returns the best move as a new board(matrix).
+    """
     boards = get_all_legal_boards(initial_board, player)
     scores = []
     for board in boards:
@@ -20,6 +23,9 @@ def get_best_move(initial_board, player, depth=1):
 
 
 def get_opponent_best_move(initial_board, player, depth=1):
+    """
+    Returns opponent's best move as a new board(matrix).
+    """
     boards = get_all_legal_boards(initial_board, -player)
     scores = []
     for board in boards:
@@ -34,6 +40,9 @@ def get_opponent_best_move(initial_board, player, depth=1):
 
 
 def evaluate_board(intitial_board, new_board, player):
+    """
+    Returns a score for a board(matrix) based on the difference in number of pieces and kings.
+    """
     player_pieces_initial = np.count_nonzero(intitial_board == player)
     player_pieces_new = np.count_nonzero(new_board == player)
     player_kings_initial = np.count_nonzero(intitial_board == player * 2)
@@ -51,10 +60,12 @@ def evaluate_board(intitial_board, new_board, player):
 
 
 def get_all_legal_boards(board, player):
+    """
+    Returns a list of all possible boards(matrixes) after one move.
+    """
     boards = []
 
     if player == -1:
-        # rotate board by 180 degrees
         board = np.rot90(board, 2)
 
     for y in range(board.shape[0]):
@@ -68,20 +79,19 @@ def get_all_legal_boards(board, player):
                         board, paths, player, is_king)
 
     if player == -1:
-        # rotate board by 180 degrees
         boards = [np.rot90(board, 2) for board in boards]
 
-    # for board in boards:
-    #     game_utils.checkers.print_board(board)
-    #     print()
     return boards
 
 
 def generate_boards_for_one_piece(board, paths, player, is_king):
+    """
+    Generate a board(matrix) from path(list of moves).
+
+    Returns a list of boards(matrixes).
+    """
     boards = []
     for path in paths:
-        if len(path) == 1:
-            continue
         new_board = board.copy()
         for i in range(len(path) - 1):
             y = path[i][0]
@@ -98,116 +108,69 @@ def generate_boards_for_one_piece(board, paths, player, is_king):
 
 
 def start_move(board, y, x, player, is_king):
-    # TODO use the get_jump_path_if_possible function here
+    """
+    Find all possible paths for a piece to move.
 
-    # first_coordinate_y = []
-    # first_coordinate_x = []
-    # second_coordinate_y = []
-    # second_coordinate_x = []
-    # if is_king and y - 1 >= 0:
-    #     first_coordinate_y.append(y - 1)
-    # if is_king and y - 2 >= 0:
-    #     second_coordinate_y.append(y - 2)
-    # if y + 1 < board.shape[0]:
-    #     first_coordinate_y.append(y + 1)
-    # if y + 2 < board.shape[0]:
-    #     second_coordinate_y.append(y + 2)
-    # if x - 1 >= 0:
-    #     first_coordinate_x.append(x - 1)
-    # if x - 2 >= 0:
-    #     second_coordinate_x.append(x - 2)
-    # if x + 1 < board.shape[1]:
-    #     first_coordinate_x.append(x + 1)
-    # if x + 2 < board.shape[1]:
-    #     second_coordinate_x.append(x + 2)
+    Returns all possible paths for a piece to move.
+    """
+    # TODO if a jump is possible discard non-jump moves
 
-    # for y_index in range(len(first_coordinate_y)):
-    #     for x_index in range(len(first_coordinate_x)):
-    #         first_key = board[first_coordinate_y[y_index], first_coordinate_x[x_index]]
+    lower_left_paths = get_paths_in_one_direction((y, x),
+                                                  (y + 1, x - 1), (y + 2, x - 2), board, player)
+    lower_right_paths = get_paths_in_one_direction((y, x),
+                                                   (y + 1, x + 1), (y + 2, x + 2), board, player)
 
-    # move left
-    lower_left_path = [[(y, x)]]
-    if x - 1 >= 0 and y + 1 < board.shape[0]:
-        first_jump = board[y + 1, x - 1]
-        if first_jump == 0:
-            lower_left_path[0].append((y + 1, x - 1))
-            # paths.append(left_path)
-        elif (first_jump == -player or first_jump == 2 * - player) and x - 2 >= 0 and y + 2 < board.shape[0]:
-            second_jump = board[y + 2, x - 2]
-            if second_jump == 0:
-                lower_left_path[0].append((y + 1, x - 1))
-                lower_left_path[0].append((y + 2, x - 2))
-                # paths.append(left_path)
-
-    # move right
-    lower_right_path = [[(y, x)]]
-    if x + 1 < board.shape[1] and y + 1 < board.shape[0]:
-        first_jump = board[y + 1, x + 1]
-        if first_jump == 0:
-            lower_right_path[0].append((y + 1, x + 1))
-            # paths.append(right_path)
-        elif (first_jump == -player or first_jump == 2 * - player) and x + 2 < board.shape[1] and y + 2 < board.shape[0]:
-            second_jump = board[y + 2, x + 2]
-            if second_jump == 0:
-                lower_right_path[0].append((y + 1, x + 1))
-                lower_right_path[0].append((y + 2, x + 2))
-                # paths.append(right_path)
-
-    upper_left_path = []
-    upper_right_path = []
+    upper_left_paths = []
+    upper_right_paths = []
     if is_king:
-        upper_left_path = [[(y, x)]]
-        if x - 1 >= 0 and y - 1 >= 0:
-            first_jump = board[y - 1, x - 1]
-            if first_jump == 0:
-                upper_left_path[0].append((y - 1, x - 1))
-                # paths.append(left_path)
-            elif (first_jump == -player or first_jump == 2 * - player) and x - 2 >= 0 and y - 2 >= 0:
-                second_jump = board[y - 2, x - 2]
-                if second_jump == 0:
-                    upper_left_path[0].append((y - 1, x - 1))
-                    upper_left_path[0].append((y - 2, x - 2))
-                    # paths.append(left_path)
+        upper_left_paths = get_paths_in_one_direction((y, x),
+                                                      (y - 1, x - 1), (y - 2, x - 2), board, player)
+        upper_right_paths = get_paths_in_one_direction((y, x),
+                                                       (y - 1, x + 1), (y - 2, x + 2), board, player)
 
-        upper_right_path = [[(y, x)]]
-        if x + 1 < board.shape[1] and y - 1 >= 0:
-            first_jump = board[y - 1, x + 1]
-            if first_jump == 0:
-                upper_right_path[0].append((y - 1, x + 1))
-                # paths.append(right_path)
-            elif (first_jump == -player or first_jump == 2 * - player) and x + 2 < board.shape[1] and y - 2 >= 0:
-                second_jump = board[y - 2, x + 2]
-                if second_jump == 0:
-                    upper_right_path[0].append((y - 1, x + 1))
-                    upper_right_path[0].append((y - 2, x + 2))
-                    # paths.append(right_path)
-
-    if len(lower_left_path[0]) == 3:
-        lower_left_path = look_for_jump(board, player, lower_left_path)
-    if len(lower_right_path[0]) == 3:
-        lower_right_path = look_for_jump(board, player, lower_right_path)
-    if is_king:
-        if len(upper_left_path[0]) == 3:
-            upper_left_path = look_for_jump(board, player, upper_left_path)
-        if len(upper_right_path[0]) == 3:
-            upper_right_path = look_for_jump(board, player, upper_right_path)
-
-    # print(left_path)
-    # print(right_path)
     paths = []
-    # paths = paths + left_path + right_path
-    for path in lower_left_path:
+    for path in lower_left_paths:
         paths.append(path)
-    for path in lower_right_path:
+    for path in lower_right_paths:
         paths.append(path)
-    for path in upper_left_path:
+    for path in upper_left_paths:
         paths.append(path)
-    for path in upper_right_path:
+    for path in upper_right_paths:
         paths.append(path)
     return paths
 
 
-def look_for_jump(board, player, paths=[], is_king=False):
+def get_paths_in_one_direction(initial_coordinate, first_coordinate, second_coordinate, board, player):
+    """
+    Generates all paths that can be taken in one direction.
+
+    Returns a list of paths.
+    """
+    paths = [[]]
+    is_first_y_valid = first_coordinate[0] >= 0 and first_coordinate[0] < board.shape[0]
+    is_first_x_valid = first_coordinate[1] >= 0 and first_coordinate[1] < board.shape[1]
+    if is_first_y_valid and is_first_x_valid:
+        first_key = board[first_coordinate[0], first_coordinate[1]]
+        if first_key == 0:
+            paths[0].append(initial_coordinate)
+            paths[0].append(first_coordinate)
+            return paths
+
+        is_second_y_valid = second_coordinate[0] >= 0 and second_coordinate[0] < board.shape[0]
+        is_second_x_valid = second_coordinate[1] >= 0 and second_coordinate[1] < board.shape[1]
+        if is_second_y_valid and is_second_x_valid and (first_key == -player or first_key == 2 * - player):
+            second_key = board[second_coordinate[0], second_coordinate[1]]
+            if second_key == 0:
+                paths[0].append(initial_coordinate)
+                paths[0].append(first_coordinate)
+                paths[0].append(second_coordinate)
+                paths = look_for_multiple_jumps(board, player, paths=paths)
+    if paths == [[]]:
+        return []
+    return paths
+
+
+def look_for_multiple_jumps(board, player, paths=[], is_king=False):
     """
     Check if we can jump over multiple opponent pieces in one move.
 
@@ -253,7 +216,7 @@ def look_for_jump(board, player, paths=[], is_king=False):
 
     if new_paths == paths:
         return new_paths
-    return look_for_jump(board=board, player=player, paths=new_paths, is_king=is_king)
+    return look_for_multiple_jumps(board=board, player=player, paths=new_paths, is_king=is_king)
 
 
 def get_jump_path_if_possible(first_coordinate, second_coordinate, board, player):
